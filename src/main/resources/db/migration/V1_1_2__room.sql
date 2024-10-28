@@ -9,16 +9,42 @@ CREATE TABLE timeslot(
     start_time TIME NOT NULL,
     end_time TIME NULL);
 
- CREATE TABLE RoomAvailabity (
-   id INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS Session (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  room_id INT NOT NULL,
+  userManager_id INT NOT NULL,
+  date DATETIME NOT NULL,
+  timeslot_id INT NOT NULL,
+
+  INDEX fk_room_id_idx (room_id ASC) VISIBLE,
+  INDEX fk_users_id_idx (userManager_id ASC) VISIBLE,
+  INDEX fk_timeslot_idx (timeslot_id ASC) VISIBLE,
+  CONSTRAINT fk_room_id
+    FOREIGN KEY (room_id)
+    REFERENCES room (id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT fk_users_id
+    FOREIGN KEY (userManager_id)
+    REFERENCES users (id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT fk_timeslot
+    FOREIGN KEY (timeslot_id)
+    REFERENCES TIMESLOT (id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+);
+
+ CREATE TABLE roomavailabity (
+   id INT NOT NULL  PRIMARY KEY AUTO_INCREMENT,
    room_id INT NOT NULL,
    date DATETIME NULL,
    timeslot_id INT NULL,
    is_available TINYINT NULL,
-   PRIMARY KEY (id),
-   INDEX fk_room_id_idx (room_id ASC) VISIBLE,
+   INDEX fk_roomm_id_idx (room_id ASC) VISIBLE,
    INDEX fk_timeslot_id_idx (timeslot_id ASC) VISIBLE,
-   CONSTRAINT fk_room_id
+   CONSTRAINT fk_roomm_id
      FOREIGN KEY (room_id)
      REFERENCES room (id)
      ON DELETE NO ACTION
