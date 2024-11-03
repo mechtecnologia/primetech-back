@@ -1,6 +1,7 @@
 package com.primetech.primetech_backend.controller;
 
 
+import com.primetech.primetech_backend.dto.RoomavailabityDTO;
 import com.primetech.primetech_backend.entity.Room;
 import com.primetech.primetech_backend.entity.RoomAvailabity;
 import com.primetech.primetech_backend.entity.User;
@@ -25,7 +26,7 @@ public class RoomController {
     private RoomAvailabityService roomAvailabityService;
 
     @GetMapping("/{id}")
-    public List<RoomAvailabity> findTime(@PathVariable Integer id){
+    public RoomavailabityDTO findTime(@PathVariable Integer id){
         return roomAvailabityService.listarHorarios(id);
     }
 
