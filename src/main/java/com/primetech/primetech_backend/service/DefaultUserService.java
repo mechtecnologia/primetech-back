@@ -1,6 +1,8 @@
 package com.primetech.primetech_backend.service;
 
 import com.primetech.primetech_backend.dto.LoginDto;
+import com.primetech.primetech_backend.dto.UserCreateDTO;
+import com.primetech.primetech_backend.dto.UserResponseDTO;
 import com.primetech.primetech_backend.entity.User;
 import com.primetech.primetech_backend.exception.ApplicationException;
 import com.primetech.primetech_backend.repository.UserRepository;
@@ -17,15 +19,22 @@ public class DefaultUserService implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public User save(User user) {
-        User emailUser = userRepository.findByEmail(user.getEmail());
+    public UserResponseDTO save(UserCreateDTO userCreateDTO) {
+
+        User emailUser = userRepository.findByEmail(userCreateDTO.getEmail());
 
         if (emailUser != null) {
             throw new ApplicationException("Email já cadastrado");
         }
-
+        User user =convertToUser(userCreateDTO);
         user.setPassword(Codificar.generateHash(user.getPassword()));
-        return userRepository.save(user);
+        userRepository.save(user);
+
+        UserResponseDTO userResponseDTO = new UserResponseDTO();
+        userResponseDTO.setUsername(user.getUsername());
+        userResponseDTO.setEmail(user.getEmail());
+
+         return userResponseDTO;
     }
 
     @Override
@@ -45,6 +54,14 @@ public class DefaultUserService implements UserService {
             }
         }
         throw new ApplicationException("Credenciais invalidas");
+    }
+
+    private User convertToUser(UserCreateDTO userCreateDTO){
+        User user= new User();
+        user.setUsername(userCreateDTO.getUsername());
+        user.setEmail(userCreateDTO.getEmail());
+        user.setPassword(userCreateDTO.getPassword());
+        return  user;
     }
 
 }
