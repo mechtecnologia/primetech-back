@@ -4,13 +4,11 @@ import com.primetech.primetech_backend.dto.AvailabityDTO;
 import com.primetech.primetech_backend.dto.RoomavailabityDTO;
 import com.primetech.primetech_backend.entity.RoomAvailabity;
 import com.primetech.primetech_backend.repository.RoomAvailabityRepository;
-import com.primetech.primetech_backend.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +16,15 @@ import java.util.stream.Collectors;
 public class DefaultRoomAvailabity implements RoomAvailabityService {
     @Autowired
     private RoomAvailabityRepository roomAvailabityRepository;
+
+    @Override
+    public void save(Integer roomId, Integer timeslotId){
+       RoomAvailabity roomAvailabity = roomAvailabityRepository.find(roomId,timeslotId);
+        System.out.println(roomAvailabity);
+        roomAvailabity.setIsAvailable(false);
+        roomAvailabityRepository.save(roomAvailabity)
+;
+    }
 
 
     @Override

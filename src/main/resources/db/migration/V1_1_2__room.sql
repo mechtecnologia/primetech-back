@@ -12,20 +12,20 @@ CREATE TABLE timeslot(
 CREATE TABLE IF NOT EXISTS Session (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   room_id INT NOT NULL,
-  userManager_id INT NOT NULL,
+  user_id INT NOT NULL,
   date DATETIME NOT NULL,
   timeslot_id INT NOT NULL,
 
   INDEX fk_room_id_idx (room_id ASC) VISIBLE,
-  INDEX fk_users_id_idx (userManager_id ASC) VISIBLE,
+  INDEX fk_users_id_idx (user_id ASC) VISIBLE,
   INDEX fk_timeslot_idx (timeslot_id ASC) VISIBLE,
   CONSTRAINT fk_room_id
     FOREIGN KEY (room_id)
     REFERENCES room (id)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT fk_users_id
-    FOREIGN KEY (userManager_id)
+  CONSTRAINT fk_users_idd
+    FOREIGN KEY (user_id)
     REFERENCES users (id)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,

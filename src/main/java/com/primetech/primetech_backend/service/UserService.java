@@ -11,6 +11,6 @@ import java.util.List;
 @Service
 public interface UserService{
     UserResponseDTO save(UserCreateDTO user);
-    List<User> findAll();
-    User login(LoginDto loginDto);
+    List<UserResponseDTO> findAll();
+    User authenticate(LoginDto loginDto);
 }

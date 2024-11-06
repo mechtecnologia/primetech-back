@@ -16,7 +16,8 @@ public class PaymentsController {
     private PaymentsService paymentsService;
 
 
-    @PostMapping("/add")
+
+    @PostMapping("/save")
     public Payments Save(@RequestBody Payments payments) {
         return paymentsService.save(payments);
     }

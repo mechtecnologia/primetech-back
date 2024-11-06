@@ -38,13 +38,13 @@ public class UserController {
     }
 
     @GetMapping("/list")
-    public List<User> findAll() {
+    public List<UserResponseDTO> findAll() {
         return userService.findAll();
     }
 
     @PostMapping("/login")
     public User login(@RequestBody LoginDto login) {
-        return userService.login(login);
+        return userService.authenticate(login);
     }
 
 

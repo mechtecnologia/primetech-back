@@ -10,6 +10,8 @@ import java.util.List;
 @Service
 public interface RoomAvailabityService {
 
+    void save(Integer roomId, Integer timeslotId);
+
     RoomavailabityDTO listarHorarios(Integer idSala);
 
 

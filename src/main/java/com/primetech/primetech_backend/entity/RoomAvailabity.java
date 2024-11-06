@@ -6,12 +6,13 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Entity
-@Table
+@Table(name = "roomavailabity")
 @Data
 public class RoomAvailabity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private LocalDateTime date;
     @Column(name = "is_available")
     private Boolean isAvailable;
