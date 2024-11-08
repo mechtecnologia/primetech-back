@@ -21,7 +21,7 @@ public class DefaultUserService implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public UserResponseDTO save(UserCreateDTO userCreateDTO) {
+    public User save(UserCreateDTO userCreateDTO) {
 
         User emailUser = userRepository.findByEmail(userCreateDTO.getEmail());
 
@@ -30,11 +30,7 @@ public class DefaultUserService implements UserService {
         }
         User user =convertToUser(userCreateDTO);
         user.setPassword(Codificar.generateHash(user.getPassword()));
-        userRepository.save(user);
-
-
-        UserResponseDTO userResponseDTO = getUserResponseDTO(user);
-        return userResponseDTO;
+         return userRepository.save(user);
     }
 
 

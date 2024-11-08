@@ -5,7 +5,7 @@ import com.primetech.primetech_backend.dto.LoginDto;
 import com.primetech.primetech_backend.dto.UserCreateDTO;
 import com.primetech.primetech_backend.dto.UserResponseDTO;
 import com.primetech.primetech_backend.entity.User;
-import com.primetech.primetech_backend.service.UserService;
+import com.primetech.primetech_backend.facade.UserFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -26,7 +26,7 @@ import static org.springframework.http.HttpStatus.*;
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    private UserFacade userFacade;
 
     @Operation(summary = "Create new User",
             description = "Create a new User",
@@ -39,20 +39,20 @@ public class UserController {
     @PostMapping("/register")
     @ResponseStatus(CREATED)
     public UserResponseDTO save(@RequestBody UserCreateDTO user) {
-        return userService.save(user);
+        return userFacade.save(user);
     }
 
 
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @GetMapping("/list")
     public List<UserResponseDTO> findAll() {
-        return userService.findAll();
+        return userFacade.findAll();
     }
 
     @PostMapping("/authenticate")
     public ResponseEntity<?> authenticate(@RequestBody LoginDto loginTo){
 
-        User user = userService.authenticate(loginTo);
+        User user = userFacade.authenticate(loginTo);
 
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
