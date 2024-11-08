@@ -31,8 +31,9 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             }
 
             res.setStatus(HttpStatus.UNAUTHORIZED.value());
+        }else{
+            filterChain.doFilter(req, res);
         }
-        filterChain.doFilter(req, res);
     }
 
     private boolean checkIfEndpointIsNotPublic(HttpServletRequest request) {

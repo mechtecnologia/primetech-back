@@ -17,6 +17,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,6 +36,15 @@ public class RoomController {
     @Autowired
     private SessionService sessionService;
 
+
+    @Operation(summary = "listar todas as salas",
+            description = "listar todas as salas"
+    )
+    @GetMapping("/list")
+    public List<Room> findAll() {
+        return roomService.listarSalas();
+    }
+
     @Operation(summary = "horario e disponibilidadede da sala especifica",
             description = "horario e disponibilidadede da sala especifica",
             responses = {
@@ -41,21 +53,13 @@ public class RoomController {
                     })
             }
     )
-    @GetMapping("/avaliable/{id}")
-    public RoomavailabityDTO findTime(@PathVariable Integer id){
-        return roomAvailabityService.listarHorarios(id);
+    @GetMapping("/avaliable/{roomId}")
+    public RoomavailabityDTO findTime(@PathVariable Integer roomId){
+        return roomAvailabityService.listarHorarios(roomId);
     }
 
-    @Operation(summary = "listar todas as salas",
-            description = "listar todas as salas"
-    )
-    @GetMapping("/list")
-    public List<Room> findAll() {
-        roomAvailabityService.save(1,1);
-        return roomService.listarSalas();
-    }
 
-    @Operation(summary = "Criar nova Sessao",
+    @Operation(summary = "Criar nova Sessao(reservar sala)",
             description = "Criar nova Sessao"
     )
     @PostMapping("/session")
@@ -65,15 +69,18 @@ public class RoomController {
     }
 
 
-    @Operation(summary = "procura session especifica",
+    @Operation(summary = "procura se ha uma sessao para x sala, em y horario",
             description = "procura session especifica"
     )
-    @GetMapping("/by-room-timeslot/{roomId}/{timeslotId}")
+    @GetMapping("/find/session/{roomId}/{timeslotId}")
     public Session findEspecificTime(@PathVariable Integer roomId, @PathVariable Integer timeslotId ){
         return sessionService.findEspecif(roomId, timeslotId);
     }
 
 
+    @Operation(summary = "se necessario ",
+            description = "procura session especifica"
+    )
     @GetMapping("/session/{id}")
     public Session findSession(@PathVariable Integer id){
         return sessionService.find(id);

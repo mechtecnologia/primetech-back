@@ -5,6 +5,7 @@ import com.primetech.primetech_backend.exception.ApplicationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @ControllerAdvice
@@ -23,6 +25,7 @@ public class GlobalExceptionHandler {
 
         ErroOutBoundDto errorOutbound = new ErroOutBoundDto(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong");
         log.error("INTERNAL_SERVER_ERROR: " + ex.getMessage());
+        log.error(ex.toString());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorOutbound);
     }
 
@@ -32,6 +35,15 @@ public class GlobalExceptionHandler {
         log.error("BAD_REQUEST: " + ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorOutbound);
     }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ErroOutBoundDto> handleAccessDeniedException(AccessDeniedException ex) {
+        ErroOutBoundDto errorOutbound = new ErroOutBoundDto(HttpStatus.FORBIDDEN, ex.getMessage());
+        log.error("Forbidden " + ex.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorOutbound);
+    }
+
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErroOutBoundDto> handlerMethodArgumentNotValidException (MethodArgumentNotValidException ex) {
 
