@@ -11,8 +11,8 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Sua API")
+                        .title("primetech-backend")
                         .version("1.0")
-                        .description("Descrição da sua API"));
+                        .description("Descrição da Api"));
     }
 }
