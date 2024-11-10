@@ -11,4 +11,6 @@ public interface UserFacade {
     UserResponseDTO save(UserCreateDTO user);
     List<UserResponseDTO> findAll();
     User authenticate(LoginDto loginDto);
+
+    void updateUser(String email);
 }

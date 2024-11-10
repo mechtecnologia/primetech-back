@@ -11,6 +11,7 @@ import com.primetech.primetech_backend.util.Codificar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +22,7 @@ public class DefaultUserService implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public User save(UserCreateDTO userCreateDTO) {
+    public User save(UserCreateDTO userCreateDTO,Role role) {
 
         User emailUser = userRepository.findByEmail(userCreateDTO.getEmail());
 
@@ -30,6 +31,8 @@ public class DefaultUserService implements UserService {
         }
         User user =convertToUser(userCreateDTO);
         user.setPassword(Codificar.generateHash(user.getPassword()));
+        user.setRoles(new ArrayList<>());
+        user.getRoles().add(role);
          return userRepository.save(user);
     }
 
@@ -51,6 +54,14 @@ public class DefaultUserService implements UserService {
             }
         }
         throw new ApplicationException("Credenciais invalidas");
+    }
+
+    @Override
+    public void updateUser(String email,Role role) {
+        System.out.println(email);
+        User user = userRepository.findByEmail(email);
+        user.getRoles().add(role);
+        userRepository.save(user);
     }
 
 

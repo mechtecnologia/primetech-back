@@ -5,10 +5,11 @@ import com.primetech.primetech_backend.dto.UserCreateDTO;
 import com.primetech.primetech_backend.dto.UserResponseDTO;
 import com.primetech.primetech_backend.entity.Role;
 import com.primetech.primetech_backend.entity.User;
-import com.primetech.primetech_backend.entity.UserRole;
-import com.primetech.primetech_backend.service.UserRoleService;
+import com.primetech.primetech_backend.service.RoleService;
 import com.primetech.primetech_backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -22,14 +23,15 @@ public class DefaultUserFacade implements UserFacade {
     private UserService userService;
 
     @Autowired
-    private UserRoleService userRoleService;
+    private RoleService roleService;
 
 
     @Override
     public UserResponseDTO save(UserCreateDTO user) {
-       User userSaved= userService.save(user);
-       userRoleService.register(userSaved);
-       return  getUserResponseDTO(userSaved);
+        Role role = roleService.register();
+        User userSaved = userService.save(user, role);
+
+        return getUserResponseDTO(userSaved);
     }
 
     @Override
@@ -42,21 +44,23 @@ public class DefaultUserFacade implements UserFacade {
         return userService.authenticate(loginDto);
     }
 
-//    public void updateUser(){
-//        userRoleService.updateRole(String email);
-//    }
+    @Override
+    public void updateUser(String email) {
 
-    private  UserResponseDTO getUserResponseDTO(User user) {
+        Role role = roleService.updateRole();
+        userService.updateUser(email, role);
+    }
+
+    private UserResponseDTO getUserResponseDTO(User user) {
         UserResponseDTO userResponseDTO = new UserResponseDTO();
         userResponseDTO.setUsername(user.getUsername());
         userResponseDTO.setEmail(user.getEmail());
-        if (user.getRoles()!=null){
+        if (user.getRoles() != null) {
             List<String> roles = user.getRoles().stream()
                     .map(Role::getName)
                     .collect(Collectors.toList());
             userResponseDTO.setRoles(roles);
         }
-
 
 
         return userResponseDTO;

@@ -4,6 +4,7 @@ import com.primetech.primetech_backend.config.security.TokenAuthenticator;
 import com.primetech.primetech_backend.dto.LoginDto;
 import com.primetech.primetech_backend.dto.UserCreateDTO;
 import com.primetech.primetech_backend.dto.UserResponseDTO;
+import com.primetech.primetech_backend.dto.UserUpdateRequest;
 import com.primetech.primetech_backend.entity.User;
 import com.primetech.primetech_backend.facade.UserFacade;
 import io.swagger.v3.oas.annotations.Operation;
@@ -61,6 +62,16 @@ public class UserController {
         token.setDetails(user);
         String tokenStr = TokenAuthenticator.addAuthentication(token);
         return ResponseEntity.ok().header(TokenAuthenticator.HEADER_STRING,tokenStr).body("sucesfful");
+    }
+
+    @Operation(summary = "Conceder permissao de colaborador",
+            description = "permissao colaborador"
+    )
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PostMapping("update/user")
+    public ResponseEntity<?> updateUser(@RequestBody UserUpdateRequest userUpdateRequest){
+        userFacade.updateUser(userUpdateRequest.getEmail());
+        return ResponseEntity.ok().body("deu certo");
     }
 
 

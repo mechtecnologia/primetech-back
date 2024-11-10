@@ -30,6 +30,12 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                 filterChain.doFilter(req, res);
             }
 
+            if((req).getServletPath().contains("swagger") || (req).getServletPath().contains("api-docs")
+            ){
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                filterChain.doFilter(req, res);
+            }
+
             res.setStatus(HttpStatus.UNAUTHORIZED.value());
         }else{
             filterChain.doFilter(req, res);
