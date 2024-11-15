@@ -34,7 +34,8 @@ public class WebSecurityConfig {
             "/swagger-ui/**",        // Permite acesso ao Swagger UI
             "/v3/api-docs/**",       // Permite acesso ao endpoint de documentação Swagger
             "/swagger-resources/**", // Permite o acesso aos recursos do Swagger
-            "/webjars/**"
+            "/webjars/**",
+            "/room/list"
     };
 
     @Bean
@@ -44,6 +45,7 @@ public class WebSecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/user/authenticate", "/user/register").permitAll()
+                        .requestMatchers("/room/list").permitAll()
                         .requestMatchers("/v3/api-docs/**",
                                 "/v3/api-docs/swagger-config",
                                 "/swagger-ui/**").permitAll()
