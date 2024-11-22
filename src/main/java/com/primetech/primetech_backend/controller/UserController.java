@@ -61,7 +61,7 @@ public class UserController {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user,user.getPassword(), user.getAuthorities());
         token.setDetails(user);
         String tokenStr = TokenAuthenticator.addAuthentication(token);
-        return ResponseEntity.ok().header(TokenAuthenticator.HEADER_STRING,tokenStr).body("sucesfful");
+        return ResponseEntity.ok().header(TokenAuthenticator.HEADER_STRING,tokenStr).body(user);
     }
 
     @Operation(summary = "Conceder permissao de colaborador",
