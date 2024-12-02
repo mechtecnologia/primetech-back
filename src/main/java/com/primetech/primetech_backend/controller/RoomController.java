@@ -8,7 +8,9 @@ import com.primetech.primetech_backend.entity.Room;
 import com.primetech.primetech_backend.entity.RoomAvailabity;
 import com.primetech.primetech_backend.entity.Session;
 import com.primetech.primetech_backend.entity.User;
+import com.primetech.primetech_backend.facade.RoomFacade;
 import com.primetech.primetech_backend.repository.RoomRepository;
+import com.primetech.primetech_backend.service.PaymentsService;
 import com.primetech.primetech_backend.service.RoomAvailabityService;
 import com.primetech.primetech_backend.service.RoomService;
 import com.primetech.primetech_backend.service.SessionService;
@@ -17,6 +19,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,14 +30,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/room")
 public class RoomController {
-    @Autowired
-    private RoomService roomService;
 
     @Autowired
-    private RoomAvailabityService roomAvailabityService;
-
-    @Autowired
-    private SessionService sessionService;
+    private RoomFacade roomFacade;
 
 
     @Operation(summary = "listar todas as salas",
@@ -42,7 +40,7 @@ public class RoomController {
     )
     @GetMapping("/list")
     public List<Room> findAll() {
-        return roomService.listarSalas();
+        return roomFacade.roomList();
     }
 
     @Operation(summary = "horario e disponibilidadede da sala especifica",
@@ -55,7 +53,7 @@ public class RoomController {
     )
     @GetMapping("/avaliable/{roomId}")
     public RoomavailabityDTO findTime(@PathVariable Integer roomId){
-        return roomAvailabityService.listarHorarios(roomId);
+        return roomFacade.roomListHour(roomId);
     }
 
 
@@ -63,9 +61,9 @@ public class RoomController {
             description = "Criar nova Sessao"
     )
     @PostMapping("/session")
-    public Session saveSession(@RequestBody SessionDTO sessionDTO){
-
-       return sessionService.save(sessionDTO);
+    public ResponseEntity saveSession(@RequestBody SessionDTO sessionDTO){
+        roomFacade.createSession(sessionDTO);
+        return ResponseEntity.ok("funcionou");
     }
 
 
@@ -74,7 +72,7 @@ public class RoomController {
     )
     @GetMapping("/find/session/{roomId}/{timeslotId}")
     public Session findEspecificTime(@PathVariable Integer roomId, @PathVariable Integer timeslotId ){
-        return sessionService.findEspecif(roomId, timeslotId);
+        return roomFacade.findSessionByHour(roomId,timeslotId);
     }
 
 
@@ -83,10 +81,13 @@ public class RoomController {
     )
     @GetMapping("/session/{id}")
     public Session findSession(@PathVariable Integer id){
-        return sessionService.find(id);
+        return roomFacade.findSessionById(id);
     }
 
-
+    private boolean hasRole(Authentication authentication, String roleName) {
+        return authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals(roleName));
+    }
 
 
 }

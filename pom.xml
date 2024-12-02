@@ -28,6 +28,14 @@
 	</scm>
 	<properties>
 		<java.version>17</java.version>
+
+			<!-- O endereço que leva à sua instalação do Sonar -->
+			<sonar.host.url>http://localhost:9000</sonar.host.url>
+			<!-- O login do seu usuário -->
+			<sonar.login>admin</sonar.login>
+			<!-- a senha de acesso deste usuário -->
+			<sonar.password>Bb607030@123</sonar.password>
+
 	</properties>
 	<dependencies>
 		<dependency>

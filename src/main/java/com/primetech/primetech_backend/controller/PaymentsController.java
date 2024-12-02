@@ -16,12 +16,6 @@ public class PaymentsController {
     private PaymentsService paymentsService;
 
 
-
-    @PostMapping("/save")
-    public Payments Save(@RequestBody Payments payments) {
-        return paymentsService.save(payments);
-    }
-
     @GetMapping("/list")
     public List<Payments> findAll() {
         return paymentsService.listarUsers();

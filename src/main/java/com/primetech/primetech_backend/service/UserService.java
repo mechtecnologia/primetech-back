@@ -15,6 +15,8 @@ public interface UserService{
     List<UserResponseDTO> findAll();
     User authenticate(LoginDto loginDto);
 
-    void updateUser(String email,Role role);
+    User findUserByEmail(String email);
+
+    void updateUser(String email, Role role);
 }
 

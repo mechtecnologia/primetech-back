@@ -3,6 +3,7 @@ package com.primetech.primetech_backend.service;
 import com.primetech.primetech_backend.dto.AvailabityDTO;
 import com.primetech.primetech_backend.dto.RoomavailabityDTO;
 import com.primetech.primetech_backend.entity.RoomAvailabity;
+import com.primetech.primetech_backend.exception.ApplicationException;
 import com.primetech.primetech_backend.repository.RoomAvailabityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,19 +19,22 @@ public class DefaultRoomAvailabity implements RoomAvailabityService {
     private RoomAvailabityRepository roomAvailabityRepository;
 
     @Override
-    public void save(Integer roomId, Integer timeslotId){
-       RoomAvailabity roomAvailabity = roomAvailabityRepository.find(roomId,timeslotId);
+    public void save(Integer roomId, Integer timeslotId) {
+        RoomAvailabity roomAvailabity = roomAvailabityRepository.find(roomId, timeslotId);
+        if (!roomAvailabity.getIsAvailable()){
+            throw new ApplicationException("Ja existe um agendamento para essa sala");
+        }
+
         System.out.println(roomAvailabity);
         roomAvailabity.setIsAvailable(false);
-        roomAvailabityRepository.save(roomAvailabity)
-;
+        roomAvailabityRepository.save(roomAvailabity);
     }
 
 
     @Override
     public RoomavailabityDTO listarHorarios(Integer idSala) {
 
-        List<RoomAvailabity> list= roomAvailabityRepository.listarHorarios(idSala);
+        List<RoomAvailabity> list = roomAvailabityRepository.listarHorarios(idSala);
 
         RoomavailabityDTO roomavailabityDTO = toRoomavailabityDTO(idSala, list);
 
@@ -39,7 +43,7 @@ public class DefaultRoomAvailabity implements RoomAvailabityService {
     }
 
 
-    private  RoomavailabityDTO toRoomavailabityDTO(Integer idSala, List<RoomAvailabity> list) {
+    private RoomavailabityDTO toRoomavailabityDTO(Integer idSala, List<RoomAvailabity> list) {
         List<AvailabityDTO> availabityDTOs = list.stream()
                 .map(roomAvailability -> {
                     AvailabityDTO dto = new AvailabityDTO();

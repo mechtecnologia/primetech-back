@@ -57,6 +57,11 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
+    public User findUserByEmail(String email){
+       return userRepository.findByEmail(email);
+    }
+
+    @Override
     public void updateUser(String email,Role role) {
         System.out.println(email);
         User user = userRepository.findByEmail(email);

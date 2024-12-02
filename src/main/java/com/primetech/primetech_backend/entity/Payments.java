@@ -2,12 +2,17 @@ package com.primetech.primetech_backend.entity;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "payments")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Payments {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

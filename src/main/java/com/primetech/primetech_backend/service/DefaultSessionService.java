@@ -9,6 +9,9 @@ import com.primetech.primetech_backend.repository.SessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Component
 public class DefaultSessionService implements SessionService {
 
@@ -16,8 +19,10 @@ public class DefaultSessionService implements SessionService {
     private SessionRepository repository;
 
     @Override
-    public Session save(SessionDTO sessionDTO) {
+    public Session save(SessionDTO sessionDTO,User user) {
         Session session = convertToSession(sessionDTO);
+        session.setUserId(user);
+
         return repository.save(session);
     }
 
@@ -36,18 +41,15 @@ public class DefaultSessionService implements SessionService {
         Session session = new Session();
         session.setDate(sessionDTO.getDate());
 
-        User user = new User();
-        user.setId(sessionDTO.getUserManager_id());
-
         Room room = new Room();
         room.setId(sessionDTO.getRoomId());
 
         TimeSlot timeSlot = new TimeSlot();
         timeSlot.setId(sessionDTO.getTimeslotId());
 
-        session.setUserId(user);
         session.setRoomId(room);
         session.setTimeSlot_Id(timeSlot);
+        session.setDate(sessionDTO.getDate());
 
         return session;
 
